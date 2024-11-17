@@ -2,6 +2,8 @@ import RestaurantCard from "./RestraurantCard"; // importing a default export
 import { restaurantsList } from "../utils/mockData"; // importing a named export
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
+import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
@@ -32,6 +34,18 @@ const Body = () => {
     setListOfRestaurants(restaurants);
     setFilteredRestaurants(restaurants);
   };
+
+  const onlineStatus = useOnlineStatus();
+
+  if (onlineStatus === false) {
+    //we can simulate this using devtools->network->no throttling
+    return (
+      <h1>
+        Looks like you are offline!!!. <br /> Please check your internet
+        connection
+      </h1>
+    );
+  }
 
   function findRestaurantsArray(data) {
     // Base case: If data is not an object or is null
@@ -99,7 +113,12 @@ const Body = () => {
       </div>
       <div className="res-container">
         {filteredRestaurants.map((restaurant) => (
-          <RestaurantCard key={restaurant.info.id} resData={restaurant} />
+          <Link
+            to={"/restaurant/" + restaurant.info.id}
+            key={restaurant.info.id}
+          >
+            <RestaurantCard resData={restaurant} />
+          </Link>
         ))}
       </div>
     </div>

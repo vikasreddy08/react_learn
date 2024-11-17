@@ -32,14 +32,19 @@
 
 .res-card{
     width: 250px;
-    height: 400px;
+    height: 450px;
     padding:5px;
     margin: 5px;
-
+    
     &:hover {
         border: 1px solid black;
         cursor: pointer;
     }
+}
+
+a{
+    color:black;
+    text-decoration: none;
 }
 
 .res-logo{
@@ -81,4 +86,9 @@
 
 .filter{
     display: flex;
+}
+
+.user-card{
+    padding: 10px;
+    border: 1px solid black;
 }
