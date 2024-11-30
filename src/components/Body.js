@@ -1,15 +1,18 @@
-import RestaurantCard from "./RestraurantCard"; // importing a default export
+import RestaurantCard, { withPromotedLabel } from "./RestraurantCard"; // importing a default export
 import { restaurantsList } from "../utils/mockData"; // importing a named export
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import Loader from "./Loader";
+import UserContext from "../utils/UserContext";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
+
+  const PromotedRestaurantCard = withPromotedLabel(RestaurantCard); //higher order component
 
   const filterTopRatedRestaurants = () => {
     const data = listOfRestaurants.filter(
@@ -31,7 +34,7 @@ const Body = () => {
     const data = await response.json();
 
     const restaurants = findRestaurantsArray(data) || [];
-    // console.log(findRestaurantsArray(data));
+    console.log(findRestaurantsArray(data));
     setListOfRestaurants(restaurants);
     setFilteredRestaurants(restaurants);
   };
@@ -79,6 +82,8 @@ const Body = () => {
     return undefined;
   }
 
+  const { loggedInUser, setUserName } = useContext(UserContext);
+
   return filteredRestaurants.length === 0 ? (
     <div
       style={{
@@ -121,6 +126,15 @@ const Body = () => {
             Top Rated Restaurants
           </button>
         </div>
+        <div className=" p-4 m-4 flex items-center ">
+          <label>Username: </label>
+          <input
+            type="text"
+            className=" ml-2 py-1 px-2 border rounded-md"
+            value={loggedInUser}
+            onChange={(e) => setUserName(e.target.value)} // using this we can change our username in context. And this even works in lazy loaded pages as well
+          />
+        </div>
       </div>
       <div className="res-container flex flex-wrap">
         {filteredRestaurants.map((restaurant) => (
@@ -128,7 +142,11 @@ const Body = () => {
             to={"/restaurant/" + restaurant.info.id}
             key={restaurant.info.id}
           >
-            <RestaurantCard resData={restaurant} />
+            {restaurant.info?.veg ? (
+              <PromotedRestaurantCard resData={restaurant} />
+            ) : (
+              <RestaurantCard resData={restaurant} />
+            )}
           </Link>
         ))}
       </div>
@@ -137,4 +155,3 @@ const Body = () => {
 };
 
 export default Body;
-

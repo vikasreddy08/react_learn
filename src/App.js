@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./components/Header";
 import Body from "./components/Body";
@@ -11,19 +11,35 @@ import RestaurantMenu from "./components/RestaurantMenu";
 // import Grocery from "./components/Grocery";
 
 import Loader from "./components/Loader";
+import UserContext from "./utils/UserContext";
 
 const Grocery = lazy(() => {
-  import("./components/Grocery");
+  return import("./components/Grocery");
 });
 
 const Applayout = () => {
+  const [userName, setUserName] = useState();
+  useEffect(() => {
+    //mock authentication call
+
+    const data = {
+      name: "GeneralXlr8",
+    };
+    setUserName(data.name);
+  }, []);
+
   return (
-  <div className="app">
-      <Header />
-      {/* <Loader /> */}
-      <Outlet />
-      {/* <Body /> */}
-    </div>
+    //setting or updating the usercontext using Provider
+    <UserContext.Provider value={{ loggedInUser: userName, setUserName }}>
+      <div className="app">
+        <UserContext.Provider value={{ loggedInUser: "other username" }}>
+          <Header />
+        </UserContext.Provider>
+        {/* <Loader /> */}
+        <Outlet />
+        {/* <Body /> */}
+      </div>
+    </UserContext.Provider>
   );
 };
 
