@@ -1,6 +1,14 @@
+import { useDispatch } from "react-redux";
 import { PIC_URL } from "../utils/constants";
+import { addItem } from "../utils/cartSlice";
 
 const FoodItem = ({ iteminfo }) => {
+  const dispatch = useDispatch();
+  const handleAddItem = (item) => {
+    // dispatch(addItem("burger")); // this will passed as {payload:"burger"} to the action argument. which is why we use action.payload in the cartSlice reducer.
+    dispatch(addItem(item));
+  };
+
   return (
     <div className="flex py-5 border-b-2 last:border-b-0">
       <div className="w-10/12">
@@ -26,7 +34,10 @@ const FoodItem = ({ iteminfo }) => {
             alt={iteminfo.name}
           />
         ) : null}
-        <button className="text-green-600 bg-white font-bold border rounded-lg shadow relative top-[-10px] w-8/12 m-auto">
+        <button
+          className="text-green-600 bg-white font-bold border rounded-lg shadow relative top-[-10px] w-8/12 m-auto"
+          onClick={() => handleAddItem(iteminfo)}
+        >
           ADD
         </button>
       </div>
