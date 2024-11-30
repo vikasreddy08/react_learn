@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import Loader from "./Loader";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
@@ -79,19 +80,27 @@ const Body = () => {
   }
 
   return filteredRestaurants.length === 0 ? (
-    <Shimmer />
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Loader />
+    </div>
   ) : (
     <div className="body">
-      <div className="filter">
-        <div className="search">
+      <div className="filter flex">
+        <div className="p-4 m-4">
           <input
             type="text"
-            className="search-box"
+            className="border border-solid border-black"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
           <button
-            className="search-btn"
+            className="px-4 py-2 bg-green-200 m-4 rounded-xl"
             onClick={() => {
               const searchData = listOfRestaurants.filter((restaurant) =>
                 restaurant.info.name
@@ -104,14 +113,16 @@ const Body = () => {
             Search
           </button>
         </div>
-        <button
-          className="filter-btn"
-          onClick={() => filterTopRatedRestaurants()}
-        >
-          Top Rated Restaurants
-        </button>
+        <div className=" p-4 m-4 flex items-center ">
+          <button
+            className="px-4 py-2 bg-gray-100 rounded-xl"
+            onClick={() => filterTopRatedRestaurants()}
+          >
+            Top Rated Restaurants
+          </button>
+        </div>
       </div>
-      <div className="res-container">
+      <div className="res-container flex flex-wrap">
         {filteredRestaurants.map((restaurant) => (
           <Link
             to={"/restaurant/" + restaurant.info.id}
@@ -126,3 +137,4 @@ const Body = () => {
 };
 
 export default Body;
+
